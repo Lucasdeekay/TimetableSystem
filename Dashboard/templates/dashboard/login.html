@@ -1,0 +1,37 @@
+{% extends 'auth.html' %}
+
+{% load static %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+<div class="col-sm-8 col-md-6 col-xl-9">
+    <h2 class="mb-3 fs-7 fw-bolder">Timetable Management System</h2>
+    <div class="position-relative text-center my-4">
+        <p class="mb-0 fs-4 px-3 d-inline-block bg-white text-dark z-index-5 position-relative">Sign in with</p>
+        <span class="border-top w-100 position-absolute top-50 start-50 translate-middle"></span>
+    </div>
+    <div id="toast">
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert"><strong>Message: </strong><i>{{ message }}</i></div>
+        {% endfor %}
+    </div>
+    <form method="post" action="">
+        {% csrf_token %}
+        {% include 'dashboard/form.html' with form=form %}
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <a class="text-primary fw-medium" href="{% url 'Dashboard:forgot_password' %}">Forgot Password ?</a>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Sign In</button>
+        <div class="d-flex align-items-center justify-content-center">
+            <p class="fs-4 mb-0 fw-medium">Are you new?</p>
+            <a class="text-primary fw-medium ms-2" href="{% url 'Dashboard:register' %}">Create an account</a>
+        </div>
+    </form>
+</div>
+{% endblock content %}
+
+{% block ajax %}
+$("#toast").fadeIn(3000);
+$("#toast").fadeOut(3000);
+{% endblock ajax %}
