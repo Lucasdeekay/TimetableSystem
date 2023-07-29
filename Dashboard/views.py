@@ -1,7 +1,7 @@
 import datetime
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -11,7 +11,9 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from Dashboard.forms import LoginForm, ForgotPasswordForm, ChangePasswordForm, UpdatePasswordForm, RegisterForm
-from Dashboard.models import Person, Lecturer, Student, Course, Department
+from Dashboard.function import change_course_to_dict, genetic_algorithm, convert_day_to_string, convert_slot_to_string, \
+    convert_day_to_int, convert_slot_to_int
+from Dashboard.models import Person, Lecturer, Student, Course, Department, Timetable
 
 
 # Create a login view
@@ -191,7 +193,80 @@ class HomeView(View):
         else:
             person = Person.objects.get(user=request.user)
             date = datetime.datetime.now().date()
-            return render(request, self.template_name, {"date": date, "person": person})
+
+            if Student.objects.filter(person=person).exists():
+                current_user = Student.objects.get(person=person)
+            else:
+                current_user = Lecturer.objects.get(person=person)
+
+            first = ['', '', '', '', '']
+            second = ['', '', '', '', '']
+            third = ['', '', '', '', '']
+            fourth = ['', '', '', '', '']
+            fifth = ['', '', '', '', '']
+            sixth = ['', '', '', '', '']
+            seventh = ['', '', '', '', '']
+            eighth = ['', '', '', '', '']
+            for t in Timetable.objects.all():
+                course = t.course
+
+                if convert_slot_to_int(t.slot) == 0:
+                    first[convert_day_to_int(t.day)] += f"{course.code}\n"
+                elif convert_slot_to_int(t.slot) == 1:
+                    second[convert_day_to_int(t.day)] += f"{course.code}\n"
+                elif convert_slot_to_int(t.slot) == 2:
+                    third[convert_day_to_int(t.day)] += f"{course.code}\n"
+                elif convert_slot_to_int(t.slot) == 3:
+                    fourth[convert_day_to_int(t.day)] += f"{course.code}\n"
+                elif convert_slot_to_int(t.slot) == 4:
+                    fifth[convert_day_to_int(t.day)] += f"{course.code}\n"
+                elif convert_slot_to_int(t.slot) == 5:
+                    sixth[convert_day_to_int(t.day)] += f"{course.code}\n"
+                elif convert_slot_to_int(t.slot) == 6:
+                    seventh[convert_day_to_int(t.day)] += f"{course.code}\n"
+                elif convert_slot_to_int(t.slot) == 7:
+                    eighth[convert_day_to_int(t.day)] += f"{course.code}\n"
+                else:
+                    pass
+
+            print(first)
+            print(second)
+            print(third)
+            print(fourth)
+            print(fifth)
+            print(sixth)
+            print(seventh)
+            print(eighth)
+
+            return render(request, self.template_name, {
+                "current_user": current_user,
+                "date": date,
+                "person": person,
+                "first": first,
+                "second": second,
+                "third": third,
+                "fourth": fourth,
+                "fifth": fifth,
+                "sixth": sixth,
+                "seventh": seventh,
+                "eight": eighth,
+            })
+
+
+
+def generate_timetable(request):
+    if Timetable.objects.all().count() > 0:
+        Timetable.objects.all().delete()
+    courses = Course.objects.all()
+    courses = change_course_to_dict(courses)
+
+    best_schedule = genetic_algorithm(courses)
+    for code, slots in best_schedule.items():
+        course = Course.objects.get(code=code)
+        for day, slot in slots:
+            Timetable.objects.create(course=course, day=convert_day_to_string(day), slot=convert_slot_to_string(slot))
+
+    return HttpResponseRedirect(reverse("Dashboard:home"))
 
 
 class CoursesView(View):
@@ -268,53 +343,67 @@ class SettingsView(View):
             return render(request, self.template_name, {'form': form, "current_user": current_user})
 
         # Create post function to process the form on submission
-        def post(self, request, username):
-            # Check if request method is POST
-            if request.method == "POST":
-                user = User.objects.get(username=username)
-                # Get the submitted form
-                form = UpdatePasswordForm(request.POST)
-                # Check if form is valid
-                if form.is_valid():
-                    # Get user input
-                    old_password = form.cleaned_data['old_password'].strip()
-                    password = form.cleaned_data['password'].strip()
-                    confirm_password = form.cleaned_data['confirm_password'].strip()
-                    # Check if old password match
-                    if user.check_password(old_password):
-                        if password == old_password:
-                            # Create message report
-                            messages.error(request, "Previous password cannot be used")
-                            # return data back to page
-                            return HttpResponseRedirect(
-                                reverse('Dashboard:settings', args=(user.username,)))
-                        elif password == "password":
-                            # Create message report
-                            messages.error(request, "Password cannot be 'password'")
-                            # return data back to page
-                            return HttpResponseRedirect(
-                                reverse('Dashboard:settings', args=(user.username,)))
-                        else:
-                            # Check if both passwords match
-                            if password == confirm_password:
-                                # Update password
-                                user.set_password(password)
-                                # Save updated data
-                                user.save()
-                                # Create message report
-                                messages.success(request, "Password successfully changed")
-                                # return data back to page
-                                return HttpResponseRedirect(reverse("Dashboard:settings"))
-                            # If passwords do not match
-                            else:
-                                # Create message report
-                                messages.error(request, "New password does not match")
-                                # return data back to page
-                                return HttpResponseRedirect(
-                                    reverse('Dashboard:settings', args=(user.username,)))
-                    # Otherwise
-                    else:
-                        messages.error(request, "Old password entered does not match")
+
+    def post(self, request, username):
+        # Check if request method is POST
+        if request.method == "POST":
+            user = User.objects.get(username=username)
+            # Get the submitted form
+            form = UpdatePasswordForm(request.POST)
+            # Check if form is valid
+            if form.is_valid():
+                # Get user input
+                old_password = form.cleaned_data['old_password'].strip()
+                password = form.cleaned_data['password'].strip()
+                confirm_password = form.cleaned_data['confirm_password'].strip()
+                # Check if old password match
+                if user.check_password(old_password):
+                    if password == old_password:
+                        # Create message report
+                        messages.error(request, "Previous password cannot be used")
                         # return data back to page
                         return HttpResponseRedirect(
                             reverse('Dashboard:settings', args=(user.username,)))
+                    elif password == "password":
+                        # Create message report
+                        messages.error(request, "Password cannot be 'password'")
+                        # return data back to page
+                        return HttpResponseRedirect(
+                            reverse('Dashboard:settings', args=(user.username,)))
+                    else:
+                        # Check if both passwords match
+                        if password == confirm_password:
+                            # Update password
+                            user.set_password(password)
+                            # Save updated data
+                            user.save()
+                            # Create message report
+                            messages.success(request, "Password successfully changed")
+                            # return data back to page
+                            return HttpResponseRedirect(reverse("Dashboard:settings"))
+                        # If passwords do not match
+                        else:
+                            # Create message report
+                            messages.error(request, "New password does not match")
+                            # return data back to page
+                            return HttpResponseRedirect(
+                                reverse('Dashboard:settings', args=(user.username,)))
+                # Otherwise
+                else:
+                    messages.error(request, "Old password entered does not match")
+                    # return data back to page
+                    return HttpResponseRedirect(
+                        reverse('Dashboard:settings', args=(user.username,)))
+
+
+# Create a logout view
+class LogoutView(View):
+
+    # Add a method decorator to make sure user is logged in
+    @method_decorator(login_required())
+    # Create get function
+    def get(self, request):
+        # logout user
+        logout(request)
+        # redirect to login page
+        return HttpResponseRedirect(reverse('Dashboard:login'))

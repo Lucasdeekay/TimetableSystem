@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from Dashboard.models import Person, Lecturer, Student, Course, Department
+from Dashboard.models import Person, Lecturer, Student, Course, Department, Timetable
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -30,4 +30,10 @@ class StudentSerializer(serializers.ModelSerializer):
 class LecturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecturer
+        fields = "__all__"
+
+
+class TimetableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Timetable
         fields = "__all__"

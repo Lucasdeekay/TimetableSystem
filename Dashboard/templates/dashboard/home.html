@@ -53,168 +53,88 @@
                     <td>
                         <h6 class="user-name mb-0">8am - 9am</h6>
                     </td>
+                    {% for course in first %}
                     <td>
-                        <span></span>
+                        <span>{{ course|linebreaks }}</span>
                     </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
+                    {% endfor %}
                 </tr>
                 <tr class="search-items">
                     <td>
                         <h6 class="user-name mb-0">9am - 10am</h6>
                     </td>
+                    {% for course in second %}
                     <td>
-                        <span></span>
+                        <span>{{ course|linebreaks }}</span>
                     </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
+                    {% endfor %}
                 </tr>
                 <tr class="search-items">
                     <td>
                         <h6 class="user-name mb-0">10am - 11am</h6>
                     </td>
+                    {% for course in third %}
                     <td>
-                        <span></span>
+                        <span>{{ course|linebreaks }}</span>
                     </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
+                    {% endfor %}
                 </tr>
                 <tr class="search-items">
                     <td>
                         <h6 class="user-name mb-0">11am - 12pm</h6>
                     </td>
+                    {% for course in fourth %}
                     <td>
-                        <span></span>
+                        <span>{{ course|linebreaks }}</span>
                     </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
+                    {% endfor %}
                 </tr>
                 <tr class="search-items">
                     <td>
                         <h6 class="user-name mb-0">12pm - 1pm</h6>
                     </td>
+                    {% for course in fifth %}
                     <td>
-                        <span></span>
+                        <span>{{ course|linebreaks }}</span>
                     </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
+                    {% endfor %}
                 </tr>
                 <tr class="search-items">
                     <td>
                         <h6 class="user-name mb-0">1pm - 2pm</h6>
                     </td>
+                    {% for course in sixth %}
                     <td>
-                        <span></span>
+                        <span>{{ course|linebreaks }}</span>
                     </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
+                    {% endfor %}
                 </tr>
                 <tr class="search-items">
                     <td>
                         <h6 class="user-name mb-0">2pm - 3pm</h6>
                     </td>
+                    {% for course in seventh %}
                     <td>
-                        <span></span>
+                        <span>{{ course|linebreaks }}</span>
                     </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
+                    {% endfor %}
                 </tr>
                 <tr class="search-items">
                     <td>
                         <h6 class="user-name mb-0">3pm - 4pm</h6>
                     </td>
+                    <{% for course in eight %}
                     <td>
-                        <span></span>
+                        <span>{{ course|linebreaks }}</span>
                     </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
-                    <td>
-                        <span></span>
-                    </td>
+                    {% endfor %}
                 </tr>
                 <!-- end row -->
                 </tbody>
             </table>
         </div>
          <div class="text-center">
-            <a class="btn btn-dark btn-lg" href="">Refresh Timetable</a>
+            <a class="btn btn-dark btn-lg" href="{% url 'Dashboard:generate' %}">Refresh Timetable</a>
         </div>
     </div>
 </div>

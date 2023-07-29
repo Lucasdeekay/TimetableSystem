@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 
-from Dashboard.models import Department, Course, Person, Student, Lecturer
+from Dashboard.models import Department, Course, Person, Student, Lecturer, Timetable
 from Dashboard.serializers import DepartmentSerializer, CourseSerializer, PersonSerializer, StudentSerializer, \
-    LecturerSerializer
+    LecturerSerializer, TimetableSerializer
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
@@ -28,3 +28,8 @@ class StudentViewSet(viewsets.ModelViewSet):
 class LecturerViewSet(viewsets.ModelViewSet):
     serializer_class = LecturerSerializer
     queryset = Lecturer.objects.all()
+
+
+class TimetableViewSet(viewsets.ModelViewSet):
+    serializer_class = TimetableSerializer
+    queryset = Timetable.objects.all()
