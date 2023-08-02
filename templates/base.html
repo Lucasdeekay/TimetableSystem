@@ -53,7 +53,7 @@
         <!-- Sidebar scroll-->
         <div>
             <div class="brand-logo d-flex align-items-center justify-content-between">
-                <a href="index.html" class="text-nowrap logo-img">
+                <a href="javascript:void(0)" class="text-nowrap logo-img">
                     <img src="{% static 'dashboard/images/logo.png' %}" class="dark-logo" width="40"
                          alt=""/>
                     <img src="{% static 'dashboard/images/logo.png' %}" class="light-logo" width="40"
@@ -239,7 +239,7 @@
                     <!-- Dashboard -->
                     <!-- =================== -->
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="index.html" aria-expanded="false">
+                        <a class="sidebar-link" href="{% url 'Dashboard:home' %}" aria-expanded="false">
                           <span>
                             <i class="ti ti-aperture"></i>
                           </span>
@@ -247,15 +247,15 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="page-user-profile.html" aria-expanded="false">
+                        <a class="sidebar-link" href="{% url 'Dashboard:courses' %}" aria-expanded="false">
                           <span>
                             <i class="ti ti-user-circle"></i>
                           </span>
-                            <span class="hide-menu">User Profile</span>
+                            <span class="hide-menu">My Courses</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link sidebar-link" href="authentication-maintenance.html"
+                        <a class="sidebar-link sidebar-link" href="{% url 'Dashboard:settings' %}"
                            aria-expanded="false">
                           <span class="rounded-3">
                             <i class="ti ti-settings"></i>
@@ -264,7 +264,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="#" aria-expanded="false">
+                        <a class="sidebar-link" href="{% url 'Dashboard:logout' %}" aria-expanded="false">
                           <span class="d-flex">
                             <i class="ti ti-logout"></i>
                           </span>
